@@ -1,14 +1,8 @@
 import { withAuth } from "@kinde-oss/kinde-auth-nextjs/server";
-import type { NextRequest } from "next/server";
 
-export default withAuth(
-  async (req: NextRequest) => {
-    //console.log(req)
-  },
-  {
-    isReturnToCurrentPage: true,
-  }
-);
+export default withAuth(async () => {}, {
+  isReturnToCurrentPage: true,
+});
 
 export const config = {
   matcher: [
