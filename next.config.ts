@@ -10,7 +10,7 @@ export default withSentryConfig(nextConfig, {
   // https://github.com/getsentry/sentry-webpack-plugin#options
 
   org: "nikola-ta",
-  project: "reapairshop",
+  project: "repairshop",
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
