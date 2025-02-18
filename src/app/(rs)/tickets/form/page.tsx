@@ -2,6 +2,7 @@ import BackButton from "@/components/back-button";
 import { getCustomer } from "@/lib/queries/customers/get-customer";
 import { getTicket } from "@/lib/queries/tickets/get-ticket";
 import * as Sentry from "@sentry/nextjs";
+import TicketForm from "./ticket-form";
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | undefined }>;
@@ -50,27 +51,25 @@ const TicketFormPage = async ({
           </div>
         );
       }
-    }
 
-    if (ticketId) {
-      const ticket = await getTicket(parseInt(ticketId));
+      if (ticketId) {
+        const ticket = await getTicket(parseInt(ticketId));
 
-      if (!ticket) {
-        return (
-          <div className="m-auto flex flex-col items-center">
-            <h2 className="text-2xl mb-2">
-              Ticket with ID #{ticketId} not found!
-            </h2>
-            <BackButton title="Go Back" />
-          </div>
-        );
+        if (!ticket) {
+          return (
+            <div className="m-auto flex flex-col items-center">
+              <h2 className="text-2xl mb-2">
+                Ticket with ID #{ticketId} not found!
+              </h2>
+              <BackButton title="Go Back" />
+            </div>
+          );
+        }
+
+        return <TicketForm customer={customer} ticket={ticket} />;
       }
 
-      const customer = await getCustomer(ticket.customerId);
-
-      console.log(customer, ticket);
-
-      return <>Edit Ticket Form</>;
+      return <TicketForm customer={customer} />;
     }
   } catch (error) {
     if (error instanceof Error) {
