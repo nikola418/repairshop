@@ -1,5 +1,9 @@
 import { customers } from "@/db/schema";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import {
+  createInsertSchema,
+  createSelectSchema,
+  createUpdateSchema,
+} from "drizzle-zod";
 
 export const insertCustomerSchema = createInsertSchema(customers, {
   firstName: (schema) => schema.min(1, "First name is required!"),
@@ -17,7 +21,10 @@ export const insertCustomerSchema = createInsertSchema(customers, {
 });
 
 export const selectCustomerSchema = createSelectSchema(customers);
+export const updateCustomerSchema = createUpdateSchema(customers).omit({
+  id: true,
+});
 
 export type InsertCustomerSchema = typeof insertCustomerSchema._type;
-
 export type SelectCustomerSchema = typeof selectCustomerSchema._type;
+export type UpdateCustomerSchema = typeof updateCustomerSchema._type;

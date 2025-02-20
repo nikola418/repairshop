@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "../ui/select";
 
-type SelectContent = {
+export type SelectOptions = {
   name: string;
   value: string;
 };
@@ -27,7 +27,7 @@ type SelectContent = {
 type Props<S> = {
   fieldTitle: string;
   nameInSchema: keyof S & string;
-  data: SelectContent[];
+  data: SelectOptions[];
   className?: HTMLSelectElement["className"];
   description?: string;
 } & SelectHTMLAttributes<HTMLSelectElement>;
@@ -60,12 +60,9 @@ const SelectWithLabel = <S,>({
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              {data.map((item) => (
-                <SelectItem
-                  key={`${nameInSchema}_${item.value}`}
-                  value={item.value}
-                >
-                  {item.name}
+              {data.map(({ name, value }) => (
+                <SelectItem key={value} value={value}>
+                  {name}
                 </SelectItem>
               ))}
             </SelectContent>

@@ -2,9 +2,14 @@
 
 import CheckboxWithLabel from "@/components/inputs/checkbox-with-label";
 import InputWithLabel from "@/components/inputs/input-with-label";
+import SelectWithLabel, {
+  SelectOptions,
+} from "@/components/inputs/select-with-label";
 import TextareaWithLabel from "@/components/inputs/textarea-with-label";
+import ServerActionResponse from "@/components/server-action-response";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { saveTicketAction } from "@/lib/actions/tickets/save-ticket-action";
 import { SelectCustomerSchema } from "@/zod-schemas/customer";
 import {
   insertTicketSchema,
@@ -12,22 +17,32 @@ import {
   SelectTicketSchema,
 } from "@/zod-schemas/ticket";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { LoaderCircle } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 type Props = {
   customer: SelectCustomerSchema;
   ticket?: SelectTicketSchema;
+  isEditable?: boolean;
+  techs?: SelectOptions[];
 };
 
-const TicketForm: FC<Props> = ({ customer, ticket }) => {
+const TicketForm: FC<Props> = ({
+  customer,
+  ticket,
+  isEditable = true,
+  techs,
+}) => {
   const defaultValues: InsertTicketSchema = {
-    id: ticket?.id || 0,
+    id: ticket?.id,
     customerId: ticket?.customerId ?? customer.id,
     title: ticket?.title ?? "",
     description: ticket?.description ?? "",
     completed: ticket?.completed ?? false,
-    tech: ticket?.tech ?? "new-ticket@example.com",
+    tech: ticket?.tech ?? "",
   };
 
   const form = useForm<InsertTicketSchema>({
@@ -36,18 +51,37 @@ const TicketForm: FC<Props> = ({ customer, ticket }) => {
     defaultValues,
   });
 
-  const onSubmit = (data: InsertTicketSchema) => {
-    console.log(data);
+  const {
+    execute: executeSave,
+    result: saveResult,
+    isPending: isSaving,
+    reset: resetSave,
+  } = useAction(saveTicketAction, {
+    onSuccess({ data }) {
+      toast.success("Success! 🎉", {
+        description: data?.message,
+      });
+    },
+    onError() {
+      toast.error("Error!", {
+        description: "Something went wrong!",
+      });
+    },
+  });
+
+  const onSubmit = async (data: InsertTicketSchema) => {
+    executeSave(data);
   };
 
   return (
     <div className="flex flex-col gap-1 sm:px-8">
+      <ServerActionResponse result={saveResult} />
       <div>
         <h2 className="text-2xl font-bold">
           {ticket?.id ? `Edit Ticket #${ticket.id}` : `New Ticket Form`}
         </h2>
       </div>
-
+      console.log(isEditable)
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -57,18 +91,25 @@ const TicketForm: FC<Props> = ({ customer, ticket }) => {
             <InputWithLabel<InsertTicketSchema>
               fieldTitle="Title"
               nameInSchema="title"
+              disabled={!isEditable}
             />
-            <InputWithLabel<InsertTicketSchema>
+            <SelectWithLabel<InsertTicketSchema>
               fieldTitle="Technician"
               nameInSchema="tech"
-              disabled
-              readOnly
+              data={[{ name: "Unassigned", value: "unassigned" }].concat(
+                techs ?? []
+              )}
+              disabled={!isEditable}
             />
-            <CheckboxWithLabel<InsertTicketSchema>
-              fieldTitle="Completed"
-              nameInSchema="completed"
-              description="Yes"
-            />
+            {ticket?.id ? (
+              <CheckboxWithLabel<InsertTicketSchema>
+                fieldTitle="Completed"
+                nameInSchema="completed"
+                description="Yes"
+                disabled={!isEditable}
+              />
+            ) : null}
+
             <div className="mt-4 space-y-2">
               <h3 className="text-lg">Customer Info</h3>
               <hr className="w-4/5" />
@@ -90,26 +131,38 @@ const TicketForm: FC<Props> = ({ customer, ticket }) => {
               fieldTitle="Description"
               nameInSchema="description"
               className="h-96"
+              disabled={!isEditable}
             />
-
-            <div className="flex gap-2">
-              <Button
-                type="submit"
-                variant="default"
-                title="Save"
-                className="w-3/4"
-              >
-                Save
-              </Button>
-              <Button
-                type="button"
-                variant="destructive"
-                title="reset"
-                onClick={() => form.reset(defaultValues)}
-              >
-                Reset
-              </Button>
-            </div>
+            {isEditable ? (
+              <div className="flex gap-2">
+                <Button
+                  type="submit"
+                  variant="default"
+                  title="Save"
+                  className="w-3/4"
+                  disabled={isSaving}
+                >
+                  {isSaving ? (
+                    <>
+                      <LoaderCircle className="animate-spin" /> Saving
+                    </>
+                  ) : (
+                    "Save"
+                  )}
+                </Button>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  title="reset"
+                  onClick={() => {
+                    form.reset(defaultValues);
+                    resetSave();
+                  }}
+                >
+                  Reset
+                </Button>
+              </div>
+            ) : null}
           </div>
         </form>
       </Form>
