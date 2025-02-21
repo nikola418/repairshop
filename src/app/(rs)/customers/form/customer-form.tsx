@@ -1,10 +1,10 @@
 "use client";
 
-import CheckboxWithLabel from "@/components/inputs/checkbox-with-label";
-import InputWithLabel from "@/components/inputs/input-with-label";
-import SelectWithLabel from "@/components/inputs/select-with-label";
-import TextareaWithLabel from "@/components/inputs/textarea-with-label";
-import ServerActionResponse from "@/components/server-action-response";
+import CheckboxWithLabel from "@/components/inputs/CheckboxWithLabel";
+import InputWithLabel from "@/components/inputs/InputWithLabel";
+import SelectWithLabel from "@/components/inputs/SelectWithLabel";
+import TextareaWithLabel from "@/components/inputs/TextareaWithLabel";
+import ServerActionResponse from "@/components/ServerActionResponse";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { states } from "@/constants/states";

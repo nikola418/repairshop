@@ -1,8 +1,8 @@
 import { File, HomeIcon, LogOut, UsersRound } from "lucide-react";
 import Link from "next/link";
 import { FC } from "react";
-import NavButton from "./nav-button";
-import ModeToggle from "./mode-toggle";
+import NavButton from "./NavButton";
+import ModeToggle from "./ModeToggle";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { Button } from "./ui/button";
 

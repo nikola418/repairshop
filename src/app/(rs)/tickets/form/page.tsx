@@ -1,5 +1,5 @@
-import BackButton from "@/components/back-button";
-import { SelectOptions } from "@/components/inputs/select-with-label";
+import BackButton from "@/components/BackButton";
+import { SelectOptions } from "@/components/inputs/SelectWithLabel";
 import { getCustomer } from "@/lib/queries/customers/get-customer";
 import { getTicket } from "@/lib/queries/tickets/get-ticket";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
