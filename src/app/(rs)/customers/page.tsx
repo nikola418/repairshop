@@ -1,6 +1,8 @@
 import { getCustomers } from "@/lib";
 import { Metadata } from "next";
-import CustomerSearch from "./CustomerSearch";
+import CustomersSearch from "./CustomersSearch";
+import * as Sentry from "@sentry/nextjs";
+import CustomersTable from "./CustomersTable";
 
 export const metadata: Metadata = {
   title: "Customer Search",
@@ -11,16 +13,19 @@ const Customers = async ({
 }: {
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) => {
-  const { searchText } = await searchParams;
+  const { search } = await searchParams;
 
-  if (!searchText) return <CustomerSearch />;
+  const span = Sentry.startInactiveSpan({
+    name: "getCustomers-2",
+  });
 
-  const results = await getCustomers(searchText);
+  const results = await getCustomers({ search });
+  span.end();
 
   return (
     <>
-      <CustomerSearch />
-      <p>{JSON.stringify(results)}</p>
+      <CustomersSearch searchParams={searchParams} />
+      <CustomersTable data={results} />
     </>
   );
 };
