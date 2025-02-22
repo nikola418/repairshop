@@ -1,8 +1,13 @@
-import { SearchButton } from "@/components";
-import { Input } from "@/components";
+import { Input, SearchButton } from "@/components";
 import Form from "next/form";
 
-const TicketSearch = () => {
+const TicketsSearch = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}) => {
+  const { search } = await searchParams;
+
   return (
     <Form action="/tickets" className="flex gap-2 items-center">
       <Input
@@ -10,10 +15,11 @@ const TicketSearch = () => {
         type="text"
         placeholder="Search Tickets"
         className="w-full"
+        defaultValue={search}
       />
       <SearchButton />
     </Form>
   );
 };
 
-export default TicketSearch;
+export default TicketsSearch;

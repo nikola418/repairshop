@@ -12,8 +12,6 @@ export const getCustomers = async ({ search }: { search?: string }) => {
     .where(
       !isUndefined(search)
         ? or(
-            ilike(customers.firstName, `%${search}%`),
-            ilike(customers.lastName, `%${search}%`),
             ilike(customers.email, `%${search}%`),
             ilike(customers.phone, `%${search}%`),
             ilike(customers.address1, `%${search}%`),

@@ -1,7 +1,8 @@
 import { getTickets } from "@/lib";
-import { isUndefined } from "lodash";
+import { isEmpty, isUndefined } from "lodash";
 import { Metadata } from "next";
-import TicketSearch from "./TicketSearch";
+import TicketsSearch from "./TicketsSearch";
+import TicketsTable from "./TicketsTable";
 
 export const metadata: Metadata = {
   title: "Ticket Search",
@@ -16,13 +17,13 @@ const Tickets = async ({
 
   const results = await getTickets({
     search,
-    isCompleted: isUndefined(search) ? false : undefined,
+    isCompleted: isUndefined(search) || isEmpty(search) ? false : undefined,
   });
 
   return (
     <>
-      <TicketSearch />
-      <p>{JSON.stringify(results)}</p>
+      <TicketsSearch searchParams={searchParams} />
+      <TicketsTable data={results} />
     </>
   );
 };

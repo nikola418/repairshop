@@ -84,38 +84,6 @@ const TicketFormPage = async ({
         );
       }
 
-      if (ticketId) {
-        const ticket = await getTicket(parseInt(ticketId));
-
-        if (!ticket) {
-          return (
-            <div className="m-auto flex flex-col items-center">
-              <h2 className="text-2xl mb-2">
-                Ticket with ID #{ticketId} not found!
-              </h2>
-              <BackButton title="Go Back" />
-            </div>
-          );
-        }
-
-        if (isManager) {
-          return (
-            <TicketForm customer={customer} ticket={ticket} techs={techs} />
-          );
-        }
-
-        const isEditable =
-          user.email?.toLowerCase() === ticket.tech.toLowerCase();
-
-        return (
-          <TicketForm
-            customer={customer}
-            ticket={ticket}
-            isEditable={isEditable}
-          />
-        );
-      }
-
       if (!isManager) {
         return (
           <div className="m-auto flex flex-col items-center">
@@ -128,6 +96,38 @@ const TicketFormPage = async ({
       }
 
       return <TicketForm customer={customer} techs={techs} />;
+    }
+
+    if (ticketId) {
+      const ticket = await getTicket(parseInt(ticketId));
+
+      if (!ticket) {
+        return (
+          <div className="m-auto flex flex-col items-center">
+            <h2 className="text-2xl mb-2">
+              Ticket with ID #{ticketId} not found!
+            </h2>
+            <BackButton title="Go Back" />
+          </div>
+        );
+      }
+
+      const customer = await getCustomer(ticket.customerId);
+
+      if (isManager) {
+        return <TicketForm customer={customer} ticket={ticket} techs={techs} />;
+      }
+
+      const isEditable =
+        user.email?.toLowerCase() === ticket.tech.toLowerCase();
+
+      return (
+        <TicketForm
+          customer={customer}
+          ticket={ticket}
+          isEditable={isEditable}
+        />
+      );
     }
   } catch (error) {
     if (error instanceof Error) {

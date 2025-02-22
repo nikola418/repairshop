@@ -16,6 +16,7 @@ import {
   SelectTicketSchema,
   InsertTicketSchema,
   insertTicketSchema,
+  UpdateTicketSchema,
 } from "@/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
@@ -37,9 +38,9 @@ const TicketForm: FC<Props> = ({
   isEditable = true,
   techs,
 }) => {
-  const defaultValues: InsertTicketSchema = {
+  const defaultValues: InsertTicketSchema | UpdateTicketSchema = {
     id: ticket?.id,
-    customerId: ticket?.customerId ?? customer.id,
+    customerId: ticket?.customerId || customer.id,
     title: ticket?.title ?? "",
     description: ticket?.description ?? "",
     completed: ticket?.completed ?? false,
