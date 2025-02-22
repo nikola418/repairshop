@@ -22,9 +22,10 @@ import {
   CircleCheckIcon,
   CircleXIcon,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { FC, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FC, useMemo, useState } from "react";
 import TicketsTableHeader, { Row } from "./TicketsTableHeader";
+import { usePolling } from "@/hooks";
 
 type Props = {
   data: TicketSearchResult;
@@ -32,6 +33,23 @@ type Props = {
 
 const TicketsTable: FC<Props> = ({ data }) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  usePolling({ ms: 10000, searchParam: searchParams.get("search") });
+
+  const pageIndex = useMemo(() => {
+    const page = searchParams.get("page");
+    return page ? parseInt(page) - 1 : 0;
+  }, [searchParams]);
+
+  const changePage = (by: number) => {
+    const newIndex = table.getState().pagination.pageIndex + by;
+    table.setPageIndex(newIndex);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", (newIndex + 1).toString());
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
+
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
     { id: "createdAt", desc: false },
@@ -117,8 +135,7 @@ const TicketsTable: FC<Props> = ({ data }) => {
   const table = useReactTable({
     data,
     columns,
-    initialState: { pagination: { pageSize: 10 } },
-    state: { columnFilters, sorting },
+    state: { columnFilters, sorting, pagination: { pageSize: 10, pageIndex } },
     onColumnFiltersChange: setColumnFilters,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
@@ -140,6 +157,9 @@ const TicketsTable: FC<Props> = ({ data }) => {
         </Button>
         <Button variant="secondary" onClick={() => table.resetSorting()}>
           Reset Sorting
+        </Button>
+        <Button variant="secondary" onClick={() => router.refresh()}>
+          Refresh Data
         </Button>
       </div>
       <div className="rounded-lg overflow-hidden border border-border">
@@ -181,14 +201,14 @@ const TicketsTable: FC<Props> = ({ data }) => {
         <div className="space-x-1">
           <Button
             variant="outline"
-            onClick={() => table.previousPage()}
+            onClick={() => changePage(-1)}
             disabled={!table.getCanPreviousPage()}
           >
             Prev
           </Button>
           <Button
             variant="outline"
-            onClick={() => table.nextPage()}
+            onClick={() => changePage(1)}
             disabled={!table.getCanNextPage()}
           >
             Next

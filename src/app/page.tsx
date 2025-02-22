@@ -23,7 +23,7 @@ export default function Home() {
           </Link>
         </section>
         <div className="fixed top-5 left-5">
-          <NavButton href="/home" icon={HomeIcon} label="Home" />
+          <NavButton href="/tickets" icon={HomeIcon} label="Home" />
         </div>
       </main>
     </div>
