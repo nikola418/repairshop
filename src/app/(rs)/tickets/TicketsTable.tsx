@@ -134,6 +134,14 @@ const TicketsTable: FC<Props> = ({ data }) => {
 
   return (
     <div className="mt-6 flex flex-col gap-4">
+      <div className="space-x-1">
+        <Button variant="secondary" onClick={() => table.resetColumnFilters()}>
+          Reset Filters
+        </Button>
+        <Button variant="secondary" onClick={() => table.resetSorting()}>
+          Reset Sorting
+        </Button>
+      </div>
       <div className="rounded-lg overflow-hidden border border-border">
         <Table className="border">
           <TicketsTableHeader table={table} />
@@ -171,15 +179,6 @@ const TicketsTable: FC<Props> = ({ data }) => {
           </p>
         </div>
         <div className="space-x-1">
-          <Button
-            variant="secondary"
-            onClick={() => table.resetColumnFilters()}
-          >
-            Reset Filters
-          </Button>
-          <Button variant="secondary" onClick={() => table.resetSorting()}>
-            Reset Sorting
-          </Button>
           <Button
             variant="outline"
             onClick={() => table.previousPage()}
