@@ -1,19 +1,21 @@
 "use client";
 
-import CheckboxWithLabel from "@/components/inputs/CheckboxWithLabel";
-import InputWithLabel from "@/components/inputs/InputWithLabel";
-import SelectWithLabel from "@/components/inputs/SelectWithLabel";
-import TextareaWithLabel from "@/components/inputs/TextareaWithLabel";
-import ServerActionResponse from "@/components/ServerActionResponse";
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { states } from "@/constants/states";
-import { saveCustomerAction } from "@/lib/actions/customers/save-customer-action";
+import {
+  Button,
+  CheckboxWithLabel,
+  Form,
+  InputWithLabel,
+  SelectWithLabel,
+  ServerActionResponse,
+  TextareaWithLabel,
+} from "@/components";
+import { states } from "@/constants";
+import { saveCustomerAction } from "@/lib";
 import {
   insertCustomerSchema,
   InsertCustomerSchema,
   SelectCustomerSchema,
-} from "@/zod-schemas/customer";
+} from "@/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { LoaderCircle } from "lucide-react";

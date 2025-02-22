@@ -1,10 +1,11 @@
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { File, HomeIcon, LogOut, UsersRound } from "lucide-react";
 import Link from "next/link";
 import { FC } from "react";
-import NavButton from "./NavButton";
-import ModeToggle from "./ModeToggle";
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { Button } from "./ui/button";
+import { NavButton } from "./buttons";
+import { ModeToggle } from "./ModeToggle";
+import { Button } from "./ui";
+import NavButtonMenu from "./buttons/NavButtonMenu";
 
 const Header: FC = () => (
   <header className="animate-slide bg-background h-12 p-2 border-b sticky top-0 z-20">
@@ -22,7 +23,14 @@ const Header: FC = () => (
       </div>
       <div className="flex items-center">
         <NavButton href="/tickets" label="Tickets" icon={File} />
-        <NavButton href="/customers" label="Customers" icon={UsersRound} />
+        <NavButtonMenu
+          icon={UsersRound}
+          label="Customer Menu"
+          choices={[
+            { title: "Search Customers", href: "/customers" },
+            { title: "New Customer", href: "/customers/form" },
+          ]}
+        />
         <ModeToggle />
         <Button
           variant="ghost"
@@ -41,4 +49,4 @@ const Header: FC = () => (
   </header>
 );
 
-export default Header;
+export { Header };

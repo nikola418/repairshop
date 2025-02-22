@@ -2,7 +2,7 @@
 
 import type { VariantProps } from "class-variance-authority";
 import { FC } from "react";
-import { Button, buttonVariants } from "./ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { useRouter } from "next/navigation";
 
 type Props = {
@@ -27,4 +27,4 @@ const BackButton: FC<Props> = ({ variant, title, className }) => {
   );
 };
 
-export default BackButton;
+export { BackButton };

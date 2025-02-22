@@ -1,5 +1,7 @@
+"use client";
+
 import { useFormStatus } from "react-dom";
-import { Button } from "./ui/button";
+import { Button } from "../ui";
 import { LoaderCircle } from "lucide-react";
 
 const SearchButton = () => {
@@ -12,4 +14,4 @@ const SearchButton = () => {
   );
 };
 
-export default SearchButton;
+export { SearchButton };

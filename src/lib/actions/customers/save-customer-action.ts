@@ -3,10 +3,8 @@
 import { db } from "@/db";
 import { customers } from "@/db/schema";
 import { actionClient } from "@/lib/queries/safe-actions";
-import {
-  InsertCustomerSchema,
-  insertCustomerSchema,
-} from "@/zod-schemas/customer";
+import { insertCustomerSchema } from "@/validators";
+import type { InsertCustomerSchema } from "@/validators";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { eq } from "drizzle-orm";
 import { first } from "lodash";

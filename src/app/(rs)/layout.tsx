@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import { Header } from "@/components";
 import { FC, PropsWithChildren } from "react";
 
 const RSLayout: FC<PropsWithChildren> = ({ children }) => (

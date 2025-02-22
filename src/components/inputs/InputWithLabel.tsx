@@ -56,4 +56,4 @@ const InputWithLabel = <S,>({
   );
 };
 
-export default InputWithLabel;
+export { InputWithLabel };

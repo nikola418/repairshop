@@ -3,7 +3,7 @@
 import { db } from "@/db";
 import { tickets } from "@/db/schema";
 import { actionClient } from "@/lib/queries/safe-actions";
-import { InsertTicketSchema, insertTicketSchema } from "@/zod-schemas/ticket";
+import { InsertTicketSchema, insertTicketSchema } from "@/validators";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { eq } from "drizzle-orm";
 import { first } from "lodash";

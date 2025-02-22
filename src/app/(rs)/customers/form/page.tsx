@@ -1,7 +1,7 @@
-import BackButton from "@/components/BackButton";
-import { getCustomer } from "@/lib/queries/customers/get-customer";
+import { BackButton } from "@/components";
+import { getCustomer } from "@/lib";
 import * as Sentry from "@sentry/nextjs";
-import CustomerForm from "./customer-form";
+import CustomerForm from "./CustomerForm";
 import { Metadata } from "next";
 
 type Params = Promise<{ slug: string }>;

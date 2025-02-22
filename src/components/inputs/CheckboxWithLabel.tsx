@@ -60,4 +60,4 @@ const CheckboxWithLabel = <S,>({
   );
 };
 
-export default CheckboxWithLabel;
+export { CheckboxWithLabel };

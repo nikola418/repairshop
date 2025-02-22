@@ -77,4 +77,4 @@ const SelectWithLabel = <S,>({
   );
 };
 
-export default SelectWithLabel;
+export { SelectWithLabel };

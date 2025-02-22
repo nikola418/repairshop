@@ -45,11 +45,11 @@ export const tickets = pgTable("tickets", {
     .$onUpdate(() => new Date()),
 });
 
-export const customerRelations = relations(customers, ({ many }) => ({
+export const customersRelations = relations(customers, ({ many }) => ({
   tickets: many(tickets),
 }));
 
-export const ticketRelations = relations(tickets, ({ one }) => ({
+export const ticketsRelations = relations(tickets, ({ one }) => ({
   customer: one(customers, {
     fields: [tickets.customerId],
     references: [customers.id],

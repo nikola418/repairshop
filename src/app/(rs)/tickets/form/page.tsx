@@ -1,7 +1,5 @@
-import BackButton from "@/components/BackButton";
-import { SelectOptions } from "@/components/inputs/SelectWithLabel";
-import { getCustomer } from "@/lib/queries/customers/get-customer";
-import { getTicket } from "@/lib/queries/tickets/get-ticket";
+import { BackButton, SelectOptions } from "@/components";
+import { getCustomer, getTicket } from "@/lib";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Users, init as kindeInit } from "@kinde/management-api-js";
 import * as Sentry from "@sentry/nextjs";

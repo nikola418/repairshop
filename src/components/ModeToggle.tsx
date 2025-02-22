@@ -37,4 +37,4 @@ const ModeToggle = () => {
   );
 };
 
-export default ModeToggle;
+export { ModeToggle };

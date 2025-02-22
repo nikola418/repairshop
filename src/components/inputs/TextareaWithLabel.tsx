@@ -56,4 +56,4 @@ const TextareaWithLabel = <S,>({
   );
 };
 
-export default TextareaWithLabel;
+export { TextareaWithLabel };

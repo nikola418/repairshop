@@ -45,4 +45,4 @@ const ServerActionResponse = ({ result }: Props) => {
   );
 };
 
-export default ServerActionResponse;
+export { ServerActionResponse };

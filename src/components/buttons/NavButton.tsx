@@ -1,7 +1,7 @@
 import { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { FC } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 type Props = {
   icon: LucideIcon;
@@ -28,4 +28,4 @@ const NavButton: FC<Props> = ({ icon: Icon, label, href }) => (
   </Button>
 );
 
-export default NavButton;
+export { NavButton };
