@@ -12,7 +12,7 @@ const CustomersTableHeader: FC<CustomersTableHeaderProps> = ({ table }) => (
     {table.getHeaderGroups().map((headerGroup) => (
       <TableRow key={headerGroup.id}>
         {headerGroup.headers.map((header) => (
-          <TableHead key={header.id} className="bg-secondary">
+          <TableHead key={header.id} className="bg-secondary py-1">
             <div>
               {header.isPlaceholder
                 ? null
@@ -23,7 +23,12 @@ const CustomersTableHeader: FC<CustomersTableHeaderProps> = ({ table }) => (
             </div>
             {header.column.getCanFilter() ? (
               <div className="grid place-content-center ">
-                <Filter column={header.column}></Filter>
+                <Filter
+                  filteredRows={table
+                    .getFilteredRowModel()
+                    .rows.map((row) => row.getValue(header.column.id))}
+                  column={header.column}
+                ></Filter>
               </div>
             ) : null}
           </TableHead>

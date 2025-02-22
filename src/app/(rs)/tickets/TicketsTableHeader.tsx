@@ -14,7 +14,11 @@ const TicketsTableHeader: FC<Props> = ({ table }) => (
     {table.getHeaderGroups().map((headerGroup) => (
       <TableRow key={headerGroup.id}>
         {headerGroup.headers.map((header) => (
-          <TableHead key={header.id} className="bg-secondary py-1">
+          <TableHead
+            key={header.id}
+            className="bg-secondary py-1"
+            style={{ width: header.getSize() }}
+          >
             <div>
               {header.isPlaceholder
                 ? null
@@ -25,7 +29,12 @@ const TicketsTableHeader: FC<Props> = ({ table }) => (
             </div>
             {header.column.getCanFilter() ? (
               <div className="grid place-content-center ">
-                <Filter column={header.column}></Filter>
+                <Filter
+                  column={header.column}
+                  filteredRows={table
+                    .getFilteredRowModel()
+                    .rows.map((row) => row.getValue(header.column.id))}
+                />
               </div>
             ) : null}
           </TableHead>

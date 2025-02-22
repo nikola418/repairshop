@@ -31,11 +31,19 @@ type Props = {
   data: TicketSearchResult;
 };
 
+const columnWidths = {
+  completed: 150,
+  createdAt: 150,
+  title: 250,
+  tech: 500,
+  email: 225,
+};
+
 const TicketsTable: FC<Props> = ({ data }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  usePolling({ ms: 10000, searchParam: searchParams.get("search") });
+  usePolling({ ms: 300_000, searchParam: searchParams.get("search") });
 
   const pageIndex = useMemo(() => {
     const page = searchParams.get("page");
@@ -87,6 +95,8 @@ const TicketsTable: FC<Props> = ({ data }) => {
       },
       {
         id: columnHeader,
+        size:
+          columnWidths[columnHeader as keyof typeof columnWidths] ?? undefined,
         header: ({ column }) => {
           return (
             <Button

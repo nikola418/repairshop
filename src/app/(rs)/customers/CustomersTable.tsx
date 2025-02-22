@@ -58,7 +58,7 @@ const CustomersTable: FC<Props> = ({ data }) => {
   return (
     <div className="mt-6 flex flex-col gap-4">
       <div className="rounded-lg overflow-hidden border border-border">
-        <Table className="border">
+        <Table className="border py-2">
           <CustomersTableHeader table={table} />
           <TableBody>
             {table.getRowModel().rows.map((row) => (

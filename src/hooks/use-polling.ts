@@ -8,7 +8,7 @@ type Props = {
   ms?: number;
 };
 
-const usePolling = ({ ms = 60000, searchParam }: Props) => {
+const usePolling = ({ ms = 60_000, searchParam }: Props) => {
   const router = useRouter();
 
   useEffect(() => {
