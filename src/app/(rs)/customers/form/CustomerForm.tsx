@@ -17,39 +17,64 @@ import {
   SelectCustomerSchema,
 } from "@/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { LoaderCircle } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
-import { FC } from "react";
+import { useSearchParams } from "next/navigation";
+import { FC, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 type Props = {
   customer?: SelectCustomerSchema;
+  isManager?: boolean;
 };
 
-const CustomerForm: FC<Props> = ({ customer }) => {
-  const { getPermission, isLoading } = useKindeBrowserClient();
-  const isManager = !isLoading && getPermission("manager")?.isGranted;
-  const defaultValues: InsertCustomerSchema = {
-    id: customer?.id,
-    firstName: customer?.firstName ?? "",
-    lastName: customer?.lastName ?? "",
-    address1: customer?.address1 ?? "",
-    address2: customer?.address2 ?? "",
-    city: customer?.city ?? "",
-    state: customer?.state ?? "",
-    zip: customer?.zip ?? "",
-    phone: customer?.phone ?? "",
-    email: customer?.email ?? "",
-    active: customer?.active ?? true,
-  };
+const newCustomer: InsertCustomerSchema = {
+  firstName: "",
+  lastName: "",
+  address1: "",
+  address2: "",
+  city: "",
+  state: "",
+  zip: "",
+  phone: "",
+  email: "",
+  active: true,
+};
+
+const CustomerForm: FC<Props> = ({ customer, isManager }) => {
+  const searchParams = useSearchParams();
+  const hasCustomerId = searchParams.has("customerId");
+
+  const defaultValues: InsertCustomerSchema = useMemo(
+    () =>
+      hasCustomerId && customer
+        ? {
+            id: customer?.id,
+            firstName: customer?.firstName,
+            lastName: customer?.lastName,
+            address1: customer?.address1,
+            address2: customer?.address2 ?? undefined,
+            city: customer?.city,
+            state: customer?.state,
+            zip: customer?.zip,
+            phone: customer?.phone,
+            email: customer?.email,
+            active: customer?.active,
+          }
+        : newCustomer,
+    [customer, hasCustomerId]
+  );
 
   const form = useForm({
     mode: "onBlur",
     resolver: zodResolver(insertCustomerSchema),
     defaultValues,
   });
+
+  useEffect(() => {
+    form.reset(hasCustomerId ? defaultValues : newCustomer);
+  }, [defaultValues, form, hasCustomerId]);
 
   const {
     executeAsync: executeInsert,
@@ -64,9 +89,11 @@ const CustomerForm: FC<Props> = ({ customer }) => {
         });
       }
     },
-    onError() {
+    onError({ error }) {
+      const { serverError } = error;
+
       toast.error("Error!", {
-        description: "Something went wrong!",
+        description: <p>{serverError ?? "Something went wrong!"}</p>,
       });
     },
   });
@@ -142,16 +169,14 @@ const CustomerForm: FC<Props> = ({ customer }) => {
               nameInSchema="notes"
               className="h-40"
             />
-            {isLoading ? (
-              <p>Loading...</p>
-            ) : isManager ? (
+            {isManager && (
               <CheckboxWithLabel<InsertCustomerSchema>
                 fieldTitle="Active"
                 nameInSchema="active"
                 description="Yes"
                 disabled={!customer?.id}
               />
-            ) : null}
+            )}
             <div className="flex gap-2 mt-4">
               <Button
                 type="submit"

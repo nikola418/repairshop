@@ -27,6 +27,7 @@ import { toast } from "sonner";
 
 type Props = {
   customer: SelectCustomerSchema;
+  isManager?: boolean;
   ticket?: SelectTicketSchema;
   isEditable?: boolean;
   techs?: SelectOptions[];
@@ -37,6 +38,7 @@ const TicketForm: FC<Props> = ({
   ticket,
   isEditable = true,
   techs,
+  isManager = false,
 }) => {
   const defaultValues: InsertTicketSchema | UpdateTicketSchema = {
     id: ticket?.id,
@@ -64,9 +66,11 @@ const TicketForm: FC<Props> = ({
         description: data?.message,
       });
     },
-    onError() {
+    onError({ error }) {
+      const { serverError } = error;
+
       toast.error("Error!", {
-        description: "Something went wrong!",
+        description: <p>{serverError ?? "Something went wrong!"}</p>,
       });
     },
   });
@@ -94,23 +98,31 @@ const TicketForm: FC<Props> = ({
               nameInSchema="title"
               disabled={!isEditable}
             />
-            <SelectWithLabel<InsertTicketSchema>
-              fieldTitle="Technician"
-              nameInSchema="tech"
-              data={[{ name: "Unassigned", value: "unassigned" }].concat(
-                techs ?? []
-              )}
-              disabled={!isEditable}
-            />
-            {ticket?.id ? (
+
+            {isManager && techs ? (
+              <SelectWithLabel<InsertTicketSchema>
+                fieldTitle="Technician"
+                nameInSchema="tech"
+                data={[{ name: "Unassigned", value: "unassigned" }].concat(
+                  techs ?? []
+                )}
+                disabled={!isEditable}
+              />
+            ) : (
+              <InputWithLabel<InsertTicketSchema>
+                fieldTitle="Tech"
+                nameInSchema="tech"
+                disabled
+              />
+            )}
+            {ticket?.id && (
               <CheckboxWithLabel<InsertTicketSchema>
                 fieldTitle="Completed"
                 nameInSchema="completed"
                 description="Yes"
                 disabled={!isEditable}
               />
-            ) : null}
-
+            )}
             <div className="mt-4 space-y-2">
               <h3 className="text-lg">Customer Info</h3>
               <hr className="w-4/5" />

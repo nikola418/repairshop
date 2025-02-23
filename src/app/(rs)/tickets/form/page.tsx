@@ -4,7 +4,7 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Users, init as kindeInit } from "@kinde/management-api-js";
 import * as Sentry from "@sentry/nextjs";
 import { Metadata } from "next";
-import TicketForm from "./ticket-form";
+import TicketForm from "./TicketForm";
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | undefined }>;
@@ -95,7 +95,9 @@ const TicketFormPage = async ({
         );
       }
 
-      return <TicketForm customer={customer} techs={techs} />;
+      return (
+        <TicketForm customer={customer} techs={techs} isManager={isManager} />
+      );
     }
 
     if (ticketId) {
@@ -115,7 +117,14 @@ const TicketFormPage = async ({
       const customer = await getCustomer(ticket.customerId);
 
       if (isManager) {
-        return <TicketForm customer={customer} ticket={ticket} techs={techs} />;
+        return (
+          <TicketForm
+            customer={customer}
+            ticket={ticket}
+            techs={techs}
+            isManager={isManager}
+          />
+        );
       }
 
       const isEditable =

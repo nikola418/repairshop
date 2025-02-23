@@ -28,7 +28,8 @@ export const getCustomers = async ({ search }: { search?: string }) => {
             })) LIKE ${`%${search.toLowerCase().replace(" ", "%")}%`}`
           )
         : undefined
-    );
+    )
+    .orderBy(customers.firstName);
 
   return results;
 };

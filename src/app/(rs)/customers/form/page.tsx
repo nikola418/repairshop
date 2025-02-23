@@ -1,8 +1,9 @@
 import { BackButton } from "@/components";
 import { getCustomer } from "@/lib";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import * as Sentry from "@sentry/nextjs";
-import CustomerForm from "./CustomerForm";
 import { Metadata } from "next";
+import CustomerForm from "./CustomerForm";
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | undefined }>;
@@ -29,6 +30,10 @@ const CustomerFormPage = async ({
   searchParams: SearchParams;
 }) => {
   try {
+    const { getPermission } = getKindeServerSession();
+    const managerPermission = await getPermission("manager");
+    const isManager = managerPermission?.isGranted;
+
     const { customerId } = await searchParams;
 
     if (customerId) {
@@ -45,10 +50,16 @@ const CustomerFormPage = async ({
         );
       }
 
-      return <CustomerForm customer={customer} />;
+      return (
+        <CustomerForm
+          key={customer.id}
+          customer={customer}
+          isManager={isManager}
+        />
+      );
     }
 
-    return <CustomerForm />;
+    return <CustomerForm key="new" />;
   } catch (error) {
     if (error instanceof Error) {
       Sentry.captureException(error);

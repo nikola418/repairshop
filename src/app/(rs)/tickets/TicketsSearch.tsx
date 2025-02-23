@@ -16,6 +16,7 @@ const TicketsSearch = async ({
         placeholder="Search Tickets"
         className="w-full"
         defaultValue={search}
+        autoFocus
       />
       <SearchButton />
     </Form>

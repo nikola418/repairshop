@@ -10,9 +10,14 @@ type CustomersTableHeaderProps = {
 const CustomersTableHeader: FC<CustomersTableHeaderProps> = ({ table }) => (
   <TableHeader>
     {table.getHeaderGroups().map((headerGroup) => (
-      <TableRow key={headerGroup.id}>
+      <TableRow key={headerGroup.id} className="bg-secondary py-1">
         {headerGroup.headers.map((header) => (
-          <TableHead key={header.id} className="bg-secondary py-1">
+          <TableHead
+            key={header.id}
+            className={`${
+              header.id === "actions" ? "grid place-content-start mt-1" : ""
+            }`}
+          >
             <div>
               {header.isPlaceholder
                 ? null
@@ -22,7 +27,7 @@ const CustomersTableHeader: FC<CustomersTableHeaderProps> = ({ table }) => (
                   )}
             </div>
             {header.column.getCanFilter() ? (
-              <div className="grid place-content-center ">
+              <div className="grid place-content-center">
                 <Filter
                   filteredRows={table
                     .getFilteredRowModel()

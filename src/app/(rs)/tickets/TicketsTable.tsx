@@ -1,6 +1,7 @@
 "use client";
 
 import { Button, Table, TableBody, TableCell, TableRow } from "@/components";
+import { usePolling } from "@/hooks";
 import { TicketSearchResult } from "@/lib";
 import {
   ColumnFiltersState,
@@ -14,7 +15,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { isEmpty, startCase } from "lodash";
+import { startCase } from "lodash";
 import {
   ArrowDown,
   ArrowUp,
@@ -23,9 +24,8 @@ import {
   CircleXIcon,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FC, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import TicketsTableHeader, { Row } from "./TicketsTableHeader";
-import { usePolling } from "@/hooks";
 
 type Props = {
   data: TicketSearchResult;
@@ -155,9 +155,17 @@ const TicketsTable: FC<Props> = ({ data }) => {
     getSortedRowModel: getSortedRowModel(),
   });
 
-  if (isEmpty(data)) {
-    return <p className="mt-4">No tickets found</p>;
-  }
+  useEffect(() => {
+    const currentPageIndex = table.getState().pagination.pageIndex;
+    const pageCount = table.getPageCount();
+
+    if (pageCount <= currentPageIndex && currentPageIndex > 0) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", "1");
+      router.replace(`?${params.toString()}`, { scroll: false });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [table.getState().columnFilters]);
 
   return (
     <div className="mt-6 flex flex-col gap-4">
@@ -197,9 +205,10 @@ const TicketsTable: FC<Props> = ({ data }) => {
       <div className="flex justify-between items-center">
         <div className="flex basis-1/3 items-center">
           <p className="whitespace-nowrap font-bold">
-            {`Page ${
-              table.getState().pagination.pageIndex + 1
-            } of ${table.getPageCount()}`}
+            {`Page ${table.getState().pagination.pageIndex + 1} of ${Math.max(
+              1,
+              table.getPageCount()
+            )}`}
             &nbsp;
             {`[${table.getFilteredRowModel().rows.length}] ${
               table.getFilteredRowModel().rows.length !== 1

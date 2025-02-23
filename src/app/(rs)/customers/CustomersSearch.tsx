@@ -17,6 +17,7 @@ const CustomersSearch = async ({
         placeholder="Search Customers"
         className="w-full"
         defaultValue={search}
+        autoFocus
       />
       <SearchButton />
     </Form>
